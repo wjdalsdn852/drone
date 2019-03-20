@@ -124,14 +124,14 @@ void calibAccelGyro(){
 
   readAccelGyro();
 
-  //초기 보정값은 10번의 가속도 자이로 센서의 값을 받아 해당 평균값을 가진다.//
+  //초기 보정값은 1000번의 가속도 자이로 센서의 값을 받아 해당 평균값을 가진다.//
   for(int i=0; i<1000; i++){
     readAccelGyro();
 
     sumAcX += AcX, sumAcY += AcY, sumAcZ += AcZ;
     sumGyX += GyX, sumGyY += GyY, sumGyZ += GyZ;
 
-    delay(100);
+    delay(1);
   }
 
   baseAcX = sumAcX / 1000;
@@ -148,7 +148,7 @@ void calibAccelGyro(){
   Serial.print(" | baseGyX = "); Serial.print(baseGyX);
   Serial.print(" | baseGyY = "); Serial.print(baseGyY);
   Serial.print(" | baseGyZ = "); Serial.println(baseGyZ);
-  delay(333);
+  delay(100);
 }
 ////////////////////////
 void initDT(){
@@ -156,8 +156,8 @@ void initDT(){
 }
 ////////////////////////
 void initYPR(){
-  //초기 호버링의 각도를 잡아주기 위해서 Roll, Pitch, Yaw 상보필터 구하는 과정을 10번 반복한다.//
-  for(int i=0; i<10; i++){
+  //초기 호버링의 각도를 잡아주기 위해서 Roll, Pitch, Yaw 상보필터 구하는 과정을 150번 반복한다.//
+  for(int i=0; i<150; i++){
     readAccelGyro();
     calcDT();
     calcAccelYPR();
@@ -168,13 +168,13 @@ void initYPR(){
     base_pitch_target_angle += filtered_angle_x;
     base_yaw_target_angle += filtered_angle_z;
 
-    delay(100);
+    delay(1);
   }
 
   //평균값을 구한다.//
-  base_roll_target_angle /= 10;
-  base_pitch_target_angle /= 10;
-  base_yaw_target_angle /= 10;
+  base_roll_target_angle /= 150;
+  base_pitch_target_angle /= 150;
+  base_yaw_target_angle /= 150;
 
   //초기 타겟 각도를 잡아준다.//
   roll_target_angle = base_roll_target_angle;
@@ -185,7 +185,7 @@ void initYPR(){
   Serial.print(" | pitch_target_angle = "); Serial.print(pitch_target_angle);
   Serial.print(" | yaw_target_angle = "); Serial.print(yaw_target_angle);
   
-  delay(333);
+  delay(100);
 }
 ///////////////////////
 void initMotorSpeed(){
